@@ -1,50 +1,31 @@
-import { View, Text, ScrollView, Image, TextInput, TouchableOpacity, StatusBar } from 'react-native'
+import { View, Text, ScrollView, Image, TextInput, TouchableOpacity, StatusBar, Alert } from 'react-native'
 import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { router } from 'expo-router'
+import { router, useRouter } from 'expo-router'
+import { images } from '~/constant/images'
+import { Formik } from 'formik';
+import validationSchema from '~/utils/authSchema'
 
 const Login = () => {
     const router = useRouter();
-    const auth = getAuth();
-    const db = getFirestore();
 
-    const handleGuest = async () => {
-        await AsyncStorage.setItem("isGuest", "true");
-        router.push("/home");
-    };
+    interface SignupValues {
+        email: string;
+        password: string;
+    }
 
-    const handleSignup = async (values) => {
+    const handleSignup = async (values: SignupValues) => {
         try {
-            const userCredentials = await createUserWithEmailAndPassword(
-                auth,
-                values.email,
-                values.password
-            );
-            const user = userCredentials.user;
-
-            await setDoc(doc(db, "users", user.uid), {
-                email: values.email,
-                createdAt: new Date(),
-            });
-
-            await AsyncStorage.setItem("userEmail", values.email);
-            await AsyncStorage.setItem("isGuest", "false");
-
-            router.push("/home");
+            console.log(values);
+            // await AsyncStorage.setItem("userEmail", values.email);
+            // await AsyncStorage.setItem("isGuest", "false");
+            router.push("/(root)");
         } catch (error) {
-            if (error.code === "auth/email-already-in-use") {
-                Alert.alert(
-                    "Signup Failed!",
-                    "This email address is already in use. Please use a different email.",
-                    [{ text: "OK" }]
-                );
-            } else {
-                Alert.alert(
-                    "Signup Error",
-                    "An unexpected error occurred. Please try again later.",
-                    [{ text: "OK" }]
-                );
-            }
+            Alert.alert(
+                "Signup Error",
+                "An unexpected error occurred. Please try again later.",
+                [{ text: "OK" }]
+            );
         }
     };
 
@@ -52,7 +33,7 @@ const Login = () => {
         <SafeAreaView className={`bg-[#2b2b2b]`}>
             <ScrollView contentContainerStyle={{ height: "100%" }}>
                 <View className="m-2 flex justify-center items-center">
-                    <Image source={logo} style={{ width: 200, height: 100 }} />
+                    <Image source={images.logo} style={{ width: 200, height: 100 }} />
                     <Text className="text-lg text-center text-white  font-bold mb-10">
                         Let's get you started
                     </Text>
@@ -102,7 +83,7 @@ const Login = () => {
                                     )}
 
                                     <TouchableOpacity
-                                        onPress={handleSubmit}
+                                        onPress={() => handleSubmit()}
                                         className="p-2 my-2 bg-[#f49b33]  text-black rounded-lg mt-10"
                                     >
                                         <Text className="text-lg font-semibold text-center">
@@ -124,28 +105,12 @@ const Login = () => {
                                     Sign in
                                 </Text>
                             </TouchableOpacity>
-
-                            <Text className="text-center text-base  font-semibold mb-4 text-white">
-                                <View className="border-b-2 border-[#f49b33] p-2 mb-1 w-24" />{" "}
-                                or{" "}
-                                <View className="border-b-2 border-[#f49b33] p-2 mb-1 w-24" />
-                            </Text>
-                            <TouchableOpacity
-                                className="flex flex-row justify-center mb-5 p-2 items-center"
-                                onPress={handleGuest}
-                            >
-                                <Text className="text-white font-semibold">Be a</Text>
-                                <Text className="text-base font-semibold underline text-[#f49b33]">
-                                    {" "}
-                                    Guest User
-                                </Text>
-                            </TouchableOpacity>
                         </View>
                     </View>
                 </View>
                 <View className="flex-1">
                     <Image
-                        source={entryImg}
+                        source={images.onboarding1}
                         className="w-full h-full"
                         resizeMode="contain"
                     />
