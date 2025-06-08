@@ -9,5 +9,5 @@ const Home = () => {
   )
 }
 
-// theme https://coolors.co/ffffff-86bb39-000000-38b3e2-eeab3d
+
 export default Home
