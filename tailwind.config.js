@@ -2,6 +2,8 @@
 module.exports = {
   content: ['./app/**/*.{js,ts,tsx}', './components/**/*.{js,ts,tsx}'],
   presets: [require('nativewind/preset')],
+
+  // theme https://coolors.co/ffffff-86bb39-000000-38b3e2-eeab3d
   theme: {
     colors: {
       // Base Colors
